@@ -1,0 +1,15 @@
+torch==2.2.2
+transformers==4.36.2
+datasets==2.16.1
+accelerate==0.25.0
+deepspeed==0.13.5
+mpi4py
+
+protobuf==4.25.3
+sentencepiece==0.1.99
+scipy==1.11.4
+evaluate==0.4.1
+tqdm==4.66.1
+
+huggingface-hub==0.20.3
+tokenizers==0.15.2

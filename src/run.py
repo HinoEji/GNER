@@ -362,12 +362,13 @@ def main():
                 load_from_cache_file=not data_args.overwrite_cache,
                 desc="Running tokenizer on train dataset",
             )
-
+    # print("RAW dataset")
+    # print(raw_datasets.keys())
     if training_args.do_eval:
         if data_args.valid_json_dir is not None:
             eval_dataset = load_dataset("json", data_files=data_args.valid_json_dir, split="train")
             logger.info(f"Use {data_args.valid_json_dir} as valid dataset, len(dataset) = {len(eval_dataset)}")
-        elif "valid" in raw_datasets:
+        elif "validation" in raw_datasets:
             eval_dataset = raw_datasets["validation"]
         else:
             raise ValueError("--do_eval requires a validation dataset")

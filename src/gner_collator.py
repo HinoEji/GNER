@@ -74,13 +74,11 @@ class DataCollatorForGNER:
                 else:
                     feature["labels"] = np.concatenate([remainder, feature["labels"]]).astype(np.int64)
 
-        features = pad_without_fast_tokenizer_warning(
-            self.tokenizer,
+        features = self.tokenizer.pad(
             features,
-            padding=self.padding,
             max_length=self.max_length,
             pad_to_multiple_of=self.pad_to_multiple_of,
-            return_tensors=return_tensors,
+            return_tensors="pt",
         )
 
         # prepare decoder_input_ids
