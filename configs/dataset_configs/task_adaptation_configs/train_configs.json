@@ -1,1 +1,14 @@
-[]
+[
+    {
+        "dataset name": "v3.1",
+        "sampling strategy": "full",
+        "max_num_instances": -1,
+        "over_sampling": false
+    },
+    {
+         "dataset name": "v3.2",
+        "sampling strategy": "full",
+        "max_num_instances": -1,
+        "over_sampling": false
+    }
+]

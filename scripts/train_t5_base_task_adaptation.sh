@@ -2,15 +2,15 @@ set -x
 
 port=$(shuf -i25000-30000 -n1)
 
-MODEL_NAME_OR_PATH=google/flan-t5-base
+MODEL_NAME_OR_PATH=VietAI/vit5-base
 DATA_DIR=data
 TRAIN_JSON_DIR=data/pile-ner.json
 DATA_CONFIG_DIR=configs/dataset_configs/task_adaptation_configs
 INSTRUCTION_FILE=configs/instruction_configs/instruction.json
-OUTPUT_DIR=output/flan-t5-base-task-adaptation
+OUTPUT_DIR=output/vit5-base-task-adaptation
 DEEPSPEED_CONFIG=configs/deepspeed_configs/deepspeed_zero0_t5.json
 
-RUN_NAME=flan-t5-base-experiment
+RUN_NAME=vit5-base-experiment
 
 deepspeed --include="localhost:0,1,2,3,4,5,6,7" --master_port $port src/run.py \
     --do_train \

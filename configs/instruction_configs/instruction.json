@@ -1,3 +1,3 @@
 [
-    "Please analyze the sentence provided, identifying the type of entity for each word on a token-by-token basis.\nOutput format is: word_1(label_1), word_2(label_2), ...\nWe'll use the BIO-format to label the entities, where:\n1. B- (Begin) indicates the start of a named entity.\n2. I- (Inside) is used for words within a named entity but are not the first word.\n3. O (Outside) denotes words that are not part of a named entity.\n"
+    "Hãy phân tích câu được cung cấp, xác định loại thực thể cho mỗi từ.\nĐịnh dạng đầu ra: từ_1(nhãn_1), từ_2(nhãn_2), ...\nChúng ta sử dụng định dạng BIO để gán nhãn thực thể, trong đó:\n1. B- (Begin) chỉ ra sự bắt đầu của một thực thể có tên.\n2. I- (Inside) được sử dụng cho các từ trong một thực thể nhưng không phải từ đầu tiên.\n3. O (Outside) biểu thị các từ không phải là một phần của thực thể có tên.\n"
 ]
