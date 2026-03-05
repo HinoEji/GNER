@@ -219,10 +219,12 @@ class GNERDataset(datasets.GeneratorBasedBuilder):
                 words, labels = instance["words"], instance["labels"]
                 instruction = self._get_instruction()
                 random.shuffle(label_list)
-                instruction += f"\nUse the specific entity tags: {', '.join(label_list)} and O.\n"
+                # instruction += f"\nUse the specific entity tags: {', '.join(label_list)} and O.\n"
+                instruction += f"\nSử dụng các nhãn thực thể sau: {', '.join(label_list)} and O.\n"
                 if add_dataset_name:
                     instruction += f"Dataset: {dataset_name}.\n"
-                instruction += "Sentence: " + " ".join(words)
+                # instruction += "Sentence: " + " ".join(words)
+                instruction += "Câu: " + " ".join(words)
                 label_text = self._generate_labeled_string(words, labels)
                 yield f"{dataset_name}##{idx}", {
                     "dataset": dataset_name,
