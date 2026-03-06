@@ -1,9 +1,5 @@
 [
-    {
-        "dataset name": "v3.1",
-        "sampling strategy": "full"
-    },
-    {
+   {
         "dataset name": "v3.2",
         "sampling strategy": "full"
     }

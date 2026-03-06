@@ -220,7 +220,7 @@ class GNERDataset(datasets.GeneratorBasedBuilder):
                 instruction = self._get_instruction()
                 random.shuffle(label_list)
                 # instruction += f"\nUse the specific entity tags: {', '.join(label_list)} and O.\n"
-                instruction += f"\nSử dụng các nhãn thực thể sau: {', '.join(label_list)} and O.\n"
+                instruction += f"\nSử dụng các nhãn thực thể sau: {', '.join(label_list)} và O.\n"
                 if add_dataset_name:
                     instruction += f"Dataset: {dataset_name}.\n"
                 # instruction += "Sentence: " + " ".join(words)

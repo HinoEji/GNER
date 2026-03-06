@@ -11,7 +11,7 @@ DEEPSPEED_CONFIG=configs/deepspeed_configs/deepspeed_zero0_t5.json
 
 RUN_NAME=vit5-base-experiment
 
-CUDA_VISIBLE_DEVICES=0 python src/run.py \
+python src/run.py \
     --do_train \
     --do_predict \
     --predict_with_generate \
@@ -25,11 +25,10 @@ CUDA_VISIBLE_DEVICES=0 python src/run.py \
     --instruction_file $INSTRUCTION_FILE \
     --output_dir $OUTPUT_DIR \
     --per_device_train_batch_size 32 \
-    --per_device_eval_batch_size 8 \
+    --per_device_eval_batch_size 32 \
     --gradient_accumulation_steps 1 \
     --learning_rate 5e-05 \
-    --num_train_epochs 15 \
-    --deepspeed $DEEPSPEED_CONFIG \
+    --num_train_epochs 50 \
     --run_name $RUN_NAME \
     --max_source_length 640 \
     --max_target_length 640 \
