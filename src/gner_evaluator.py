@@ -5,6 +5,8 @@ from collections import defaultdict
 from transformers import AutoTokenizer
 from tqdm import tqdm
 import argparse
+from seqeval.metrics import classification_report as type_classification_report
+from sklearn.metrics import classification_report as tag_classification_report
 
 
 # extract words and corresponding labels in the generation texts
@@ -188,9 +190,34 @@ def parser(words, labels):
 
 # compute F1 score
 # modified from https://github.com/universal-ner/universal-ner/blob/main/src/eval/evaluate.py
+def flat_classification_report(report, prefix=""):
+    flat = {}
+    for label, metrics in report.items():
+
+        if isinstance(metrics, dict):
+            for m, value in metrics.items():
+                key = f"{label}_{m}".replace(" ", "_")
+
+                # chỉ prefix cho macro avg và weighted avg
+                if label in ["macro avg", "weighted avg"] and prefix:
+                    key = f"{prefix}_{key}"
+
+                flat[key] = value
+
+        else:  # accuracy
+            key = "accuracy"
+            if prefix:
+                key = f"{prefix}_{key}"
+            flat[key] = metrics
+
+    return flat
+
 class NEREvaluator:
     def evaluate(self, examples: list, tokenizer):
         n_correct, n_pos_gold, n_pos_pred = 0, 0, 0
+        y_true = []
+        y_pred = []
+
         for example in tqdm(examples):
             words = example['instance']['words']
             labels = example['instance']['labels']
@@ -202,6 +229,20 @@ class NEREvaluator:
                     n_correct += 1
                 n_pos_pred += 1
             n_pos_gold += len(gold_tuples)
+            y_true.append(labels)
+            y_pred.append(predictions)
+        y_true_flatten = [label for example in y_true for label in example]
+        y_pred_flatten = [label for example in y_pred for label in example]
+        print("--------------------Type Classification Report--------------------")
+        print(type_classification_report(y_true, y_pred))
+        print("--------------------Tag Classification Report--------------------")
+        print(tag_classification_report(y_true_flatten, y_pred_flatten))
+
+        type_metrics = type_classification_report(y_true, y_pred, output_dict=True)
+        tag_metrics = tag_classification_report(y_true_flatten, y_pred_flatten, output_dict=True)
+        type_metrics = flat_classification_report(type_metrics, prefix="type")
+        tag_metrics = flat_classification_report(tag_metrics, prefix="tag")
+        
         prec = n_correct / (n_pos_pred + 1e-10)
         recall = n_correct / (n_pos_gold + 1e-10)
         f1 = 2 * prec * recall / (prec + recall + 1e-10)
@@ -209,6 +250,8 @@ class NEREvaluator:
             'precision': prec,
             'recall': recall,
             'f1': f1,
+            **type_metrics,
+            **tag_metrics,
         }
 
 def compute_metrics(examples, tokenizer=None):
@@ -221,9 +264,11 @@ def compute_metrics(examples, tokenizer=None):
     tot_f1, tot_dataset = 0, 0
     for dataset in all_examples:
         eval_result = NEREvaluator().evaluate(all_examples[dataset], tokenizer=tokenizer)
-        results[f"{dataset}_precision"] = eval_result["precision"]
-        results[f"{dataset}_recall"] = eval_result["recall"]
-        results[f"{dataset}_f1"] = eval_result["f1"]
+        for key, value in eval_result.items():
+        # results[f"{dataset}_precision"] = eval_result["precision"]
+        # results[f"{dataset}_recall"] = eval_result["recall"]
+        # results[f"{dataset}_f1"] = eval_result["f1"]
+            results[f"{dataset}_{key}"] = value
         tot_f1 += eval_result["f1"]
         tot_dataset += 1
     results["average_f1"] = tot_f1 / tot_dataset

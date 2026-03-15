@@ -28,8 +28,8 @@ python src/run.py \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 16 \
     --gradient_accumulation_steps 1 \
-    --learning_rate 3e-05 \
-    --num_train_epochs 75 \
+    --learning_rate 2e-05 \
+    --num_train_epochs 50 \
     --run_name $RUN_NAME \
     --max_source_length 640 \
     --max_target_length 640 \
@@ -42,6 +42,6 @@ python src/run.py \
     --logging_steps 10 \
     --evaluation_strategy epoch \
     --save_strategy epoch \
-    --save_total_limit 1 \
+    --save_total_limit 2 \
     --report_to "tensorboard" \
     --seed 1234

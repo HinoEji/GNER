@@ -1,25 +1,32 @@
-#!/bin/bash
-# Evaluation script for Vietnamese ABSA models
+set -x
 
-# Set MODEL_TYPE to either "task-adaptation" or "supervised"
-MODEL_TYPE=${1:-task-adaptation}
+port=$(shuf -i25000-30000 -n1)
 
-TOKENIZER_PATH=VietAI/vit5-base
-MODEL_PATH=output/vit5-base-vietnamese-${MODEL_TYPE}
-PREDICTION_FILE=${MODEL_PATH}/predict_text_generations.jsonl
+BEAM_SIZE=1
+MODEL_NAME_OR_PATH=HinoEiji/GNER-Vit5-base
+DATA_DIR=data
+DATA_CONFIG_DIR=configs/dataset_configs/task_adaptation_configs
+INSTRUCTION_FILE=configs/instruction_configs/instruction.json
+OUTPUT_DIR=output/flan-t5-xxl-task-adaptation-beam${BEAM_SIZE}
 
-echo "Evaluating ${MODEL_TYPE} model..."
-echo "Model path: ${MODEL_PATH}"
-echo "Prediction file: ${PREDICTION_FILE}"
-echo ""
+RUN_NAME=flan-t5-xxl-experiment
 
-python evaluate.py \
-    --tokenizer-path $TOKENIZER_PATH \
-    --prediction-path $PREDICTION_FILE
-
-echo ""
-echo "Evaluation complete!"
-echo "To evaluate the other model type, run:"
-echo "  bash scripts/eval_vit5_vietnamese.sh supervised"
-echo "  bash scripts/eval_vit5_vietnamese.sh task-adaptation"
-
+python src/run.py \
+    --bf16 True --tf32 True \
+    --generation_num_beams ${BEAM_SIZE} \
+    --do_predict \
+    --predict_with_generate \
+    --model_name_or_path $MODEL_NAME_OR_PATH \
+    --data_dir $DATA_DIR \
+    --preprocessing_num_workers 4 \
+    --data_config_dir $DATA_CONFIG_DIR \
+    --instruction_file $INSTRUCTION_FILE \
+    --output_dir $OUTPUT_DIR \
+    --per_device_eval_batch_size 64 \
+    --run_name $RUN_NAME \
+    --max_source_length 640 \
+    --max_target_length 640 \
+    --generation_max_length 640 \
+    --overwrite_output_dir \
+    --overwrite_cache \
+    --seed 1234
