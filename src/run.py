@@ -70,6 +70,13 @@ class ModelArguments:
             )
         },
     )
+    added_tokens: Optional[str] = field(
+        default=None,
+        metadata={
+            "help": "Danh sách các token mới cần thêm vào, cách nhau bằng dấu phẩy. VD: '<B-PRODUCT_QUALITY>,<I-PRODUCT_QUALITY>'"
+        },
+    )
+
     trust_remote_code: bool = field(
         default=False,
         metadata={
@@ -260,6 +267,22 @@ def main():
         token=model_args.token,
         trust_remote_code=model_args.trust_remote_code,
     )
+
+    # ADD new tokens
+    if model_args.added_tokens is not None:
+        # Split string into list of tokens
+        new_tokens_list = [tok.strip() for tok in model_args.added_tokens.split(",") if tok.strip()]
+        
+        # Add tokens to tokenizer
+        num_added_toks = tokenizer.add_tokens(new_tokens_list)
+        
+        if num_added_toks > 0:
+            logger.info(f"Added {num_added_toks} new tokens to Tokenizer: {new_tokens_list}")
+            # Resize model token embeddings to match the new vocabulary size
+            model.resize_token_embeddings(len(tokenizer))
+            logger.info(f"Resized model token embeddings to: {len(tokenizer)}")
+        else:
+            logger.info("These tokens already exist in the vocabulary, no need to add new ones.")
 
     def preprocess_function(example):
         # remove pairs where at least one record is None

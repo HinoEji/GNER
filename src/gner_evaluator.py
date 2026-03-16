@@ -222,6 +222,14 @@ class NEREvaluator:
             words = example['instance']['words']
             labels = example['instance']['labels']
             predictions = extract_predictions(example, tokenizer)
+            # xử lý predictions, trường hợp đặc biệt với bartpho base
+            for i in range(len(predictions)):
+                if predictions[i] == "B-PRODUCTITY":
+                    predictions[i] = "B-PRODUCT QUALITY"
+                elif predictions[i] == "I-PRODUCTITY":
+                    predictions[i] = "I-PRODUCT QUALITY"
+                
+                    
             gold_tuples = parser(words, labels)
             pred_tuples = parser(words, predictions)
             for t in pred_tuples:
@@ -234,12 +242,12 @@ class NEREvaluator:
         y_true_flatten = [label for example in y_true for label in example]
         y_pred_flatten = [label for example in y_pred for label in example]
         print("--------------------Type Classification Report--------------------")
-        print(type_classification_report(y_true, y_pred))
+        print(type_classification_report(y_true, y_pred,zero_division=0))
         print("--------------------Tag Classification Report--------------------")
-        print(tag_classification_report(y_true_flatten, y_pred_flatten))
+        print(tag_classification_report(y_true_flatten, y_pred_flatten,zero_division=0))
 
-        type_metrics = type_classification_report(y_true, y_pred, output_dict=True)
-        tag_metrics = tag_classification_report(y_true_flatten, y_pred_flatten, output_dict=True)
+        type_metrics = type_classification_report(y_true, y_pred, output_dict=True,zero_division=0)
+        tag_metrics = tag_classification_report(y_true_flatten, y_pred_flatten, output_dict=True,zero_division=0)
         type_metrics = flat_classification_report(type_metrics, prefix="type")
         tag_metrics = flat_classification_report(tag_metrics, prefix="tag")
         
