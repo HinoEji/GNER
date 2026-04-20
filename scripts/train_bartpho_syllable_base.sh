@@ -30,7 +30,7 @@ python src/run.py \
     --per_device_train_batch_size 64 \
     --per_device_eval_batch_size 64 \
     --gradient_accumulation_steps 1 \
-    --learning_rate 5e-05 \
+    --learning_rate 2e-05 \
     --num_train_epochs 50 \
     --run_name $RUN_NAME \
     --max_source_length 640 \
