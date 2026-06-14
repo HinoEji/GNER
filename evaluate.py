@@ -159,7 +159,7 @@ def normalize_answer(s):
         return ''.join(ch for ch in text if ch not in exclude)
     def lower(text):
         return text.lower()
-    return white_space_fix(remove_articles(remove_punc(lower(s))))
+    return white_space_fix(remove_articles(s))
 
 # parser BIO format into entity format, 
 # modified from https://github.com/universal-ner/universal-ner/blob/main/src/eval/evaluate.py
