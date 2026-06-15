@@ -30,16 +30,30 @@ def read_jsonl(path, tokenizer):
             bio_pred = extract_predictions(pred, tokenizer)
             entity_pred = parser(token, bio_pred)
             entity_label = parser(token, bio_label)
+            labels = []
+
+            for label in entity_label:
+                labels.append({
+                    "Span": label[0],
+                    "Topic": label[1],
+                })
+
+            preds = []
+            for pred in entity_pred:
+                preds.append({
+                    "Span": pred[0],
+                    "Topic": pred[1],
+                })
 
             data.append(
                 {
                     "tokens": token,
-                    "bio_labels" : bio_label,
-                    "entity_labels": entity_label,
-                    "bio_preds" : bio_pred,
-                    "entity_preds" : entity_pred,
-                    "response" : response,
-                    "list_entities" : [x.lower() for x in obj['label_list']]
+                    # "bio_labels" : bio_label,
+                    "labels": labels,
+                    # "bio_preds" : bio_pred,
+                    "preds" : preds,
+                    # "response" : response,
+                    # "list_entities" : [x.lower() for x in obj['label_list']]
                 }
             )
 
