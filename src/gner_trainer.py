@@ -2,6 +2,7 @@ import torch
 from transformers import GenerationConfig
 from transformers.trainer_seq2seq import Seq2SeqTrainer
 from transformers.trainer import *
+from typing import *
 
 
 class GNERTrainer(Seq2SeqTrainer):
