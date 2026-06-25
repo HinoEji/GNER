@@ -1,3 +1,4 @@
+wrapt==2.1.2
 torch==2.3.1
 
 transformers==4.42.4
@@ -15,6 +16,6 @@ scipy==1.13.1
 evaluate==0.4.2
 tqdm==4.66.4
 
-mpi4py
-seqeval
-tensorboard
+mpi4py==4.1.2
+seqeval==1.2.2
+tensorboard==2.19.0
